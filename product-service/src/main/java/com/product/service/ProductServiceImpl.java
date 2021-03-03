@@ -9,9 +9,11 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+//define the business logic
 @Service
 public class ProductServiceImpl implements ProductService {
 
+    //autowire the ProductRepository interface
     @Autowired
     private ProductRepository productRepository;
 

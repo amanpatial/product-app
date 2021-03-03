@@ -9,12 +9,14 @@ import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.*;
 
-/* Product Domain */
+/* Product Domain - Class name as Table name */
+
 @Entity
 @Table(name = "products")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Product {
 
+    //Defining product id as primary key
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name="id")

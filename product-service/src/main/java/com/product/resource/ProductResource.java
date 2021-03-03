@@ -28,6 +28,7 @@ public class ProductResource {
     private static final Logger LOGGER = LoggerFactory.getLogger(ProductResource.class);
     private int maxTopViewLimit = 5;
 
+    //autowire the ProductService class
     @Autowired
     private ProductService productService;
 
@@ -39,6 +40,7 @@ public class ProductResource {
     }
 
     // Get All Products
+    //create a get mapping that retrieves all the products detail from the database
     @CrossOrigin(origins = "*")
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<List<Product>> getProducts() {
@@ -75,6 +77,7 @@ public class ProductResource {
     }
 
     // Add Product
+    //creating post mapping that post the book detail in the database
     @CrossOrigin(origins = "*")
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<?> addProduct(@RequestBody Product product) {
