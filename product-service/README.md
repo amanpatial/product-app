@@ -4,6 +4,12 @@ Spring Boot (version 2.0.0) maven based application with REST CRUD API end point
 ### Pre-requisites and build steps
 ```
 Make sure that your operating system had JDK 1.8, Maven 3.x and PostgreSQL database installed
+Set up Postgresql database engine
+Set up pgAdmin database client
+create database product
+
+Set up IDE such as Eclipse or Intellij or STS or Visual code studio
+
 java -version
 mvn -v
 git --version
