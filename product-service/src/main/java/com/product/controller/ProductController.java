@@ -1,6 +1,8 @@
 package com.product.controller;
 
 import com.product.dto.ProductDto;
+import com.product.exception.ProductAlreadyExistException;
+import com.product.exception.ResourceNotFoundException;
 import com.product.model.Product;
 import com.product.service.ProductMapper;
 import com.product.service.ProductService;
@@ -51,8 +53,7 @@ public class ProductController {
     // Get Single Product
     @CrossOrigin(origins = "*")
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ResponseEntity<ProductDto> getProduct(@PathVariable Long id,
-            @RequestParam("optionalCurrencyCode") Optional<String> optionalCurrencyCode) {
+    public ResponseEntity<ProductDto> getProduct(@PathVariable Long id) throws ResourceNotFoundException {
         Product product = productService.getProduct(id);
         ProductDto productDto = new ProductDto();
         System.out.print("Product info:" + product.toString());
@@ -60,7 +61,8 @@ public class ProductController {
             productDto = ProductMapper.productEntityToProductDto(product);
             return new ResponseEntity<>(productDto, HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(productDto, HttpStatus.NOT_FOUND);
+            //return new ResponseEntity<>(productDto, HttpStatus.NOT_FOUND);
+            throw new ResourceNotFoundException("Product is not found for this id :: " + id);
         }
     }
 
@@ -68,9 +70,16 @@ public class ProductController {
     // Request mapping that post the product detail in the database
     @CrossOrigin(origins = "*")
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<?> addProduct(@RequestBody Product product) {
-        productService.addProduct(product);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    public ResponseEntity<?> addProduct(@RequestBody Product product) throws ProductAlreadyExistException{
+        List<Product> products = productService.findByName(product.getName());
+        if(!products.isEmpty()) {
+            throw new ProductAlreadyExistException("Product name already exists :: " + product.getName());
+        }
+        else {
+            productService.addProduct(product);
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        }
+
     }
 
     // Update Product
