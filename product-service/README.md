@@ -1,37 +1,26 @@
 ## Spring Boot Project
-Spring Boot (version 2.0.0) application with CRUD end points connecting through mysql.
+Spring Boot (version 2.0.0) maven based application with REST CRUD API end points connecting through PostgreSQL.
 
 ### Pre-requisites and build steps
 ```
-Make sure that your operating system had JDK 1.8 and Maven 3.x installed
+Make sure that your operating system had JDK 1.8, Maven 3.x and PostgreSQL database installed
 java -version
 mvn -v
+git --version
+
 clone the code repository
 cd /go/to/project/code/root/directory
 mvn clean install
 mvn clean install -DskipTests -Dpmd.skip=true  (optional to avoid the test package building)
-java -jar ./target/user-service-0.0.1-SNAPSHOT.jar --spring.config.location=./src/main/resources/application.properties
-```
-###  Docker's pre-requisites and installation steps
-```
-Make sure that your operating system had JDK 1.8 and Maven 3.x installed
-Make sure docker latest verison is installed. use docker -v
-Refer: https://docs.docker.com/install/linux/docker-ce/centos/#install-using-the-repository
-sudo systemctl start docker
-
-clone the code repository
-cd /go/to/project/code/root/directory
-mvn clean install
-docker build -f Dockerfile -t user-service .
-docker images 
-docker run -p 8080:8080 user-service
+java -jar ./target/product-service-0.0.1-SNAPSHOT.jar
+java -jar ./target/product-service-0.0.1-SNAPSHOT.jar --spring.config.location=./src/main/resources/application.properties
 ```
 
 ## APIs
 
-### Create a user resource
+### Create a product resource
 ```
-POST /users
+POST /api/v1/products
 Accept: application/json
 Content-Type: application/json
 
@@ -42,131 +31,117 @@ Content-Type: application/json
 }
 
 RESPONSE: HTTP 201 (Created)
-Location: http://localhost:8080/users
+Location: http://localhost:8080/api/v1/products
 ```
 
-### Retrieve a list of users
+### Retrieve a list of products
 ```
-GET /users
-
-RESPONSE: HTTP 200
-Content: list of users in json format
-```
-
-### Retrieve a user
-```
-GET /users/1
+GET /api/v1/products
 
 RESPONSE: HTTP 200
-http://localhost:8080/users/1
-Content: user information in json format
+Content: list of products in json format
+[
+    {
+        "id": 1,
+        "name": "shirt",
+        "price": 3,
+        "description": "shirt",
+        "views": 6
+    },
+    {
+        "id": 2,
+        "name": "Cap",
+        "price": 14,
+        "description": "Cap with fur",
+        "views": 1
+    },
+    {
+        "id": 3,
+        "name": "Jeans",
+        "price": 14,
+        "description": "Jeans with shades",
+        "views": 0
+    }
+]    
+```
+
+### Retrieve a product
+```
+GET /api/v1/products/1
+
+RESPONSE: HTTP 200
+http://localhost:8080/api/v1/products/1
+Content: product information in json format
 
 {
-  "id":"1",
-  "name": "aman",
-  "email": "aman.patial@gmail.com",
-  "addresses": [
-            {
-                "id": 17,
-                "addressText": "Chandigarh"
-            },
-            {
-                "id": 3,
-                "addressText": "Bangalore"
-            },
-            {
-                "id": 4,
-                "addressText": "Amritsar"
-            }
-        ]
-}
-```
-### Retrieve a user by name
-```
-GET /users/filter
-
-RESPONSE: HTTP 200
-http://localhost:8080/users/filter?name=aman
-Content: user information in json format
-
-{
-  "id":"1",
-  "name": "aman",
-  "email": "aman.patial@gmail.com",
-  "addresses": [
-            {
-                "id": 17,
-                "addressText": "Chandigarh"
-            },
-            {
-                "id": 3,
-                "addressText": "Bangalore"
-            },
-            {
-                "id": 4,
-                "addressText": "Amritsar"
-            }
-        ]
+    "id": 1,
+    "name": "shirt",
+    "price": 3,
+    "description": "shirt",
+    "views": 6
 }
 ```
 
-### Update a user resource
+### Update a product
 ```
-PUT /users/1
+PUT /api/v1/products/1
 Accept: application/json
 Content-Type: application/json
 
 {
-  "id":"1",
-  "name": "aman patial",
-  "email": "aman.patial@gmail.com"
+  "name": "Shirt with round neck",
+  "price": 7,
+  "description": "Shirt with round neck"
 }
 
 RESPONSE: HTTP 200
-Location: http://localhost:8080/users/1
+Location: http://localhost:8080/api/v1/products/1
 ```
 
-### Delete a user resource
+### Retrieve a product by name
 ```
-DELETE /users/1
+GET /api/v1/products/filter?name=???
+
+RESPONSE: HTTP 200
+http://localhost:8080/api/v1/products/filter?name=shirt
+Content: product information in json format
+
+[
+    {
+        "id": 1,
+        "name": "shirt",
+        "price": 3,
+        "description": "shirt",
+        "views": 6
+    }
+]
+```
+
+### Retrieve a product by its view count
+```
+GET /api/v1/products/popular/1
+
+RESPONSE: HTTP 200
+http://localhost:8080/api/v1/products/popular/1
+Content: most viewed product information in json format
+
+[
+    {
+        "id": 1,
+        "name": "shirt",
+        "price": 3,
+        "description": "shirt",
+        "views": 6
+    }
+]
+```
+
+### Delete a product resource
+```
+DELETE /api/v1/products/1
 Accept: application/json
 Content-Type: application/json
 
 RESPONSE: HTTP 200
-Location: http://localhost:8080/users/1
-```
-
-### Create a address resource for a user
-```
-POST /users/{userid}/addresses
-Accept: application/json
-Content-Type: application/json
-
-/users/1/addresses
-{
-    "addressText": "Chandigarh"
-}
-```
-## Create a address resource
-```
-POST /address
-
-{
-    "addressText": "Chandigarh"
-}
-
-```
-
-## Get a address resource
-```
-Get /address
-
-{
-    "addressText": "Chandigarh"
-},
-
-{
-    "addressText": "Amritsar"
-}
-
+Location: http://localhost:8080/api/v1/products/1
 ```
