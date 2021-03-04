@@ -25,9 +25,9 @@ Accept: application/json
 Content-Type: application/json
 
 {
-  "id":"1",
-  "name": "aman",
-  "email": "aman.patial@gmail.com"
+  "name": "shirt",
+  "price": 14,
+  "description": "shirt"
 }
 
 RESPONSE: HTTP 201 (Created)
