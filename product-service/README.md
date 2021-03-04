@@ -1,6 +1,20 @@
 ## Spring Boot Project
 Spring Boot (version 2.0.0) maven based application with REST CRUD API end points connecting through PostgreSQL.
 
+### Tools and Technologies used
+```
+Spring Boot - 2.0.0.RELEASE
+JDK - 1.8
+Spring Framework - 5.0.4 RELEASE
+Hibernate - 5.0.1.Final
+JPA - 2.0.0.RELEASE
+Maven - 3.6.3
+IDE - Eclipse or Intellij or STS or Visual code studio
+PostgreSQL - 42.2.5
+pgAdmin4 
+git - 2.25.0
+```
+
 ### Pre-requisites and build steps
 ```
 Make sure that your operating system had JDK 1.8, Maven 3.x and PostgreSQL database installed
