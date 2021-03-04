@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 @Service
 public class ProductServiceImpl implements ProductService {
 
-    //autowire the ProductRepository interface
+    //autowire the ProductRepository
     @Autowired
     private ProductRepository productRepository;
 
@@ -31,6 +31,16 @@ public class ProductServiceImpl implements ProductService {
         return product;
     }
 
+    public Product updateProduct(Product product, Long id){
+        Product updateProduct = productRepository.getOne(id);
+        if (updateProduct != null) {
+            updateProduct.setName(product.getName());
+            updateProduct.setPrice(product.getPrice());
+            updateProduct.setDescription(product.getDescription());
+        }
+        return productRepository.save(updateProduct);
+    }
+
     public List<Product> getMostViewedProducts(int maxLimit){
         List<Product> products = productRepository.findAll();
         return findMaxViewed(products, maxLimit);
@@ -44,10 +54,6 @@ public class ProductServiceImpl implements ProductService {
 
     public void deleteProduct(Long id){
         productRepository.deleteById(id);
-    }
-
-    public Product updateProduct(Product product, Long id){
-        return productRepository.save(product);
     }
 
     public Product addProduct(Product product) { return productRepository.save(product); }

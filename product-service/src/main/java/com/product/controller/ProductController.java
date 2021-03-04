@@ -1,8 +1,7 @@
-package com.product.resource;
+package com.product.controller;
 
 import com.product.dto.ProductDto;
 import com.product.model.Product;
-import com.product.service.Currency;
 import com.product.service.ProductMapper;
 import com.product.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,13 +21,13 @@ import java.util.Optional;
  */
 
 @RestController
-@RequestMapping("/products")
-public class ProductResource {
+@RequestMapping("/api/v1/products")
+public class ProductController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ProductResource.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProductController.class);
     private int maxTopViewLimit = 5;
 
-    //autowire the ProductService class
+    // autowire the ProductService class
     @Autowired
     private ProductService productService;
 
@@ -40,7 +39,8 @@ public class ProductResource {
     }
 
     // Get All Products
-    //create a get mapping that retrieves all the products detail from the database
+    // create a Request Mapping that retrieves all the products detail from the
+    // database
     @CrossOrigin(origins = "*")
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<List<Product>> getProducts() {
@@ -52,38 +52,25 @@ public class ProductResource {
     @CrossOrigin(origins = "*")
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ResponseEntity<ProductDto> getProduct(@PathVariable Long id,
-                                                 @RequestParam("optionalCurrencyCode")
-                                                         Optional<String> optionalCurrencyCode) {
+            @RequestParam("optionalCurrencyCode") Optional<String> optionalCurrencyCode) {
         Product product = productService.getProduct(id);
-        ProductDto productDto = new  ProductDto();
-        System.out.print("Product" + product);
+        ProductDto productDto = new ProductDto();
+        System.out.print("Product info:" + product.toString());
         if (product != null) {
-            Currency currency = optionalCurrencyCode.isPresent()?
-                    Currency.valueOf(optionalCurrencyCode.get().replaceAll("^\"|\"$", "")):Currency.USD;
-            productDto = ProductMapper.productEntityToProductDto(product, currency);
+            productDto = ProductMapper.productEntityToProductDto(product);
             return new ResponseEntity<>(productDto, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(productDto, HttpStatus.NOT_FOUND);
         }
     }
 
-    // Get Most Viewed Products
-    @RequestMapping(value = "/mostviewed/{maxTopViewLimit}", method = RequestMethod.GET)
-    public ResponseEntity<List<Product>> getMostViewProducts(@PathVariable int maxTopViewLimit){
-        HttpHeaders responseHeaders = new HttpHeaders();
-
-        return new ResponseEntity<List<Product>>(
-                productService.getMostViewedProducts(maxTopViewLimit), responseHeaders, HttpStatus.OK);
-    }
-
     // Add Product
-    //creating post mapping that post the book detail in the database
+    // Request mapping that post the product detail in the database
     @CrossOrigin(origins = "*")
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<?> addProduct(@RequestBody Product product) {
         productService.addProduct(product);
         return new ResponseEntity<>(HttpStatus.CREATED);
-        //addProduct();
     }
 
     // Update Product
@@ -101,10 +88,19 @@ public class ProductResource {
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
 
-    // Get Products by name
+    // Get Products by name in query string e.g. /api/v1/products/filter?name=shirt
     @CrossOrigin(origins = "*")
     @RequestMapping("/filter")
     public List<Product> findByName(@RequestParam(value = "name") String name) {
         return productService.findByName(name);
+    }
+
+    // Get Products those are most viewed
+    @RequestMapping(value = "/popular/{maxTopViewLimit}", method = RequestMethod.GET)
+    public ResponseEntity<List<Product>> getMostViewProducts(@PathVariable int maxTopViewLimit) {
+        HttpHeaders responseHeaders = new HttpHeaders();
+
+        return new ResponseEntity<List<Product>>(productService.getMostViewedProducts(maxTopViewLimit), responseHeaders,
+                HttpStatus.OK);
     }
 }

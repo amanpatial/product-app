@@ -7,19 +7,11 @@ public final class ProductMapper {
     private ProductMapper() {
     }
 
-    public static ProductDto productEntityToProductDto(Product product, Currency currency) {
+    public static ProductDto productEntityToProductDto(Product product) {
         ProductDto productDto = new ProductDto();
         productDto.setId(product.getId());
         productDto.setName(product.getName());
-
-        if (currency == Currency.USD) {
-            productDto.setPrice(product.getPrice());
-        } else {
-            CurrencyAPIClient client = new CurrencyAPIClient();
-            double price = client.getPriceForUSD(product.getPrice(), currency);
-            productDto.setPrice(price);
-        }
-
+        productDto.setPrice(product.getPrice());
         productDto.setDescription(product.getDescription());
         productDto.setViews(product.getViews());
         return productDto;
