@@ -10,7 +10,7 @@ Hibernate - 5.0.1.Final
 JPA - 2.0.0.RELEASE
 Maven - 3.6.3
 IDE - Eclipse or Intellij or STS or Visual code studio
-PostgreSQL - 42.2.5
+PostgreSQL - 12.5
 pgAdmin4 
 git - 2.25.0
 ```
