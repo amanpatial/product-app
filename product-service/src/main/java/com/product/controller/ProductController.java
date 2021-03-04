@@ -14,10 +14,9 @@ import org.springframework.web.bind.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.util.List;
-import java.util.Optional;
 
 /**
- * REST endpoint
+ * REST endpoints
  *
  * @author aman
  */
@@ -61,7 +60,7 @@ public class ProductController {
             productDto = ProductMapper.productEntityToProductDto(product);
             return new ResponseEntity<>(productDto, HttpStatus.OK);
         } else {
-            //return new ResponseEntity<>(productDto, HttpStatus.NOT_FOUND);
+            // return new ResponseEntity<>(productDto, HttpStatus.NOT_FOUND);
             throw new ResourceNotFoundException("Product is not found for this id :: " + id);
         }
     }
@@ -70,12 +69,11 @@ public class ProductController {
     // Request mapping that post the product detail in the database
     @CrossOrigin(origins = "*")
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<?> addProduct(@RequestBody Product product) throws ProductAlreadyExistException{
+    public ResponseEntity<?> addProduct(@RequestBody Product product) throws ProductAlreadyExistException {
         List<Product> products = productService.findByName(product.getName());
-        if(!products.isEmpty()) {
+        if (!products.isEmpty()) {
             throw new ProductAlreadyExistException("Product name already exists :: " + product.getName());
-        }
-        else {
+        } else {
             productService.addProduct(product);
             return new ResponseEntity<>(HttpStatus.CREATED);
         }
